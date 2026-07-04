@@ -1,0 +1,11 @@
+tenure	MonthlyCharges	TotalCharges	InternetService	PaymentMethod	PaperlessBilling	Contract	OnlineSecurity	OnlineBackup	DeviceProtection	TechSupport	Partner	Dependents
+1	29.85	29.85	DSL	Electronic check	Yes	Month-to-month	No	Yes	No	No	Yes	No
+34	56.95	1889.5	Fiber optic	Mailed check	No	One year	Yes	No	Yes	Yes	No	No
+2	53.85	108.15	DSL	Electronic check	Yes	Month-to-month	No	No	No	No	No	No
+45	42.3	1840.75	No	Bank transfer (automatic)	No	Two year	No internet service	No internet service	No internet service	No internet service	Yes	Yes
+10	89.1	891	Fiber optic	Credit card (automatic)	Yes	Month-to-month	Yes	Yes	Yes	No	No	Yes
+22	65.5	1441	DSL	Mailed check	No	One year	Yes	No	Yes	Yes	Yes	No
+5	70.35	350.75	Fiber optic	Electronic check	Yes	Month-to-month	No	No	No	No	No	No
+60	25.25	1515	No	Bank transfer (automatic)	No	Two year	No internet service	No internet service	No internet service	No internet service	Yes	Yes
+14	78.2	1094.8	Fiber optic	Credit card (automatic)	Yes	Month-to-month	Yes	No	Yes	No	Yes	No
+8	49.9	399.2	DSL	Electronic check	Yes	Month-to-month	No	Yes	No	No	No	Yes

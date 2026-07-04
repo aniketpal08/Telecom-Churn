@@ -1,0 +1,11 @@
+tenure,MonthlyCharges,TotalCharges,InternetService,PaymentMethod,PaperlessBilling,Contract,OnlineSecurity,OnlineBackup,DeviceProtection,TechSupport,Partner,Dependents,Predicted_Churn,Churn_Probability
+1,29.85,29.85,DSL,Electronic check,Yes,Month-to-month,No,Yes,No,No,Yes,No,Yes,0.7658386898635008
+34,56.95,1889.50,Fiber optic,Mailed check,No,One year,Yes,No,Yes,Yes,No,No,No,0.1834504165664886
+2,53.85,108.15,DSL,Electronic check,Yes,Month-to-month,No,No,No,No,No,No,Yes,0.8095977477388464
+45,42.30,1840.75,No,Bank transfer (automatic),No,Two year,No internet service,No internet service,No internet service,No internet service,Yes,Yes,No,0.026437097993463606
+10,89.10,891.00,Fiber optic,Credit card (automatic),Yes,Month-to-month,Yes,Yes,Yes,No,No,Yes,Yes,0.6337272068603882
+22,65.50,1441.00,DSL,Mailed check,No,One year,Yes,No,Yes,Yes,Yes,No,No,0.18881642118075107
+5,70.35,350.75,Fiber optic,Electronic check,Yes,Month-to-month,No,No,No,No,No,No,Yes,0.8774483226852081
+60,25.25,1515.00,No,Bank transfer (automatic),No,Two year,No internet service,No internet service,No internet service,No internet service,Yes,Yes,No,0.011366336391023756
+14,78.20,1094.80,Fiber optic,Credit card (automatic),Yes,Month-to-month,Yes,No,Yes,No,Yes,No,Yes,0.707036626360673
+8,49.90,399.20,DSL,Electronic check,Yes,Month-to-month,No,Yes,No,No,No,Yes,Yes,0.6780962387286844

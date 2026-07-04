@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulk Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Bulk Churn Prediction</h1>
+        <a href="{{ url_for('home') }}" class="back-link">← Back to Home</a>
+
+        <p class="subtitle">
+            Upload a CSV or Excel file containing customer records.
+        </p>
+
+        <div class="note-box">
+            <h3>Required Columns</h3>
+            <p>
+                tenure, MonthlyCharges, TotalCharges, InternetService, PaymentMethod,
+                PaperlessBilling, Contract, OnlineSecurity, OnlineBackup,
+                DeviceProtection, TechSupport, Partner, Dependents
+            </p>
+        </div>
+
+        <form action="{{ url_for('predict_bulk') }}" method="POST" enctype="multipart/form-data" class="upload-form">
+            <input type="file" name="file" accept=".csv,.xlsx,.xls" required>
+            <button type="submit" class="btn">Upload & Predict</button>
+        </form>
+
+        {% if error %}
+            <div class="error-box">
+                <strong>Error:</strong> {{ error }}
+            </div>
+        {% endif %}
+
+        {% if success %}
+            <div class="success-box">
+                <strong>{{ success }}</strong>
+            </div>
+        {% endif %}
+
+        {% if download_ready %}
+            <div class="download-box">
+                <a href="{{ url_for('download_file') }}" class="btn">Download Prediction File</a>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
