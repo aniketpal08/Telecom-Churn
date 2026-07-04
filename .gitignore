@@ -6,3 +6,6 @@ y_test.csv
 model.pkl
 pipeline.pkl
 .env
+
+bulk_predictions.csv
+telco_churn_model.pkl
