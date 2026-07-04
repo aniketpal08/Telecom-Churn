@@ -1,27 +1,27 @@
 # Telco Customer Churn Prediction
 
-A machine learning web application built with **Flask** that predicts whether a telecom customer is likely to churn.
+A Flask-based machine learning web app that predicts whether a telecom customer is likely to churn.
 
-The app supports **two modes**:
-1. **Single Customer Prediction** — manually enter customer details and predict churn.
-2. **Bulk Prediction** — upload a **CSV or Excel file** containing multiple customers and get churn predictions for all rows.
+The app supports two modes:
+- **Single Prediction** — enter one customer’s details manually
+- **Bulk Prediction** — upload a CSV or Excel file to predict churn for multiple customers at once
 
 ---
 
 ## Dataset
-- **Dataset:** Telco Customer Churn Dataset
-- **Target Variable:** `Churn`
+- **Dataset:** Telco Customer Churn
+- **Target variable:** `Churn`
 
 ---
 
 ## Features Used
 
-### Numerical Features
+### Numerical
 - `tenure`
 - `MonthlyCharges`
 - `TotalCharges`
 
-### Categorical Features
+### Categorical
 - `InternetService`
 - `PaymentMethod`
 - `PaperlessBilling`
@@ -35,22 +35,23 @@ The app supports **two modes**:
 
 ---
 
-## Model Used
+## Model
 - **Logistic Regression**
-- **Preprocessing Pipeline**
-  - Median imputation for numerical features
-  - Most frequent imputation for categorical features
-  - StandardScaler for numerical features
-  - OneHotEncoder for categorical features
+
+### Preprocessing
+- Median imputation for numerical features
+- Most-frequent imputation for categorical features
+- Standard scaling for numerical columns
+- One-hot encoding for categorical columns
 
 ---
 
-## Project Features
+## App Features
 - Single customer churn prediction
-- Bulk prediction from **CSV / Excel**
-- Automatic preprocessing using saved pipeline
-- Column validation for uploaded files
-- Output file download with:
+- Bulk prediction using **CSV / Excel**
+- Automatic preprocessing through a saved pipeline
+- Uploaded file column validation
+- Downloadable output file with:
   - `Predicted_Churn`
   - `Churn_Probability`
 
@@ -63,8 +64,6 @@ Telecom-Churn/
 │
 ├── app.py
 ├── train_model.py
-├── model.pkl
-├── pipeline.pkl
 ├── requirements.txt
 ├── README.md
 ├── sample_bulk.csv
