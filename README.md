@@ -1,4 +1,4 @@
-# Telco Customer Churn Prediction
+# Telecom Customer Churn Prediction
 
 A Flask-based machine learning web app that predicts whether a telecom customer is likely to churn.
 
@@ -9,7 +9,8 @@ The app supports two modes:
 ---
 
 ## Dataset
-- **Dataset:** Telco Customer Churn
+- **Dataset:** Telecom Customer Churn
+- **Source:** [Kaggle - Telco Customer Churn Dataset](https://www.kaggle.com/datasets/blastchar/telco-customer-churn)
 - **Target variable:** `Churn`
 
 ---
