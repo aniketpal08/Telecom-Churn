@@ -27,9 +27,11 @@ required_cols = num_attribs + cat_attribs
 # ---------------- COLUMN NORMALIZATION MAP ----------------
 column_mapping = {
     "tenure": "tenure",
+
     "monthlycharges": "MonthlyCharges",
     "monthly_charges": "MonthlyCharges",
     "monthly charges": "MonthlyCharges",
+
     "totalcharges": "TotalCharges",
     "total_charges": "TotalCharges",
     "total charges": "TotalCharges",
@@ -78,9 +80,11 @@ def normalize_columns(df):
     df.columns = new_cols
     return df
 
+
 def validate_columns(df):
     missing = [col for col in required_cols if col not in df.columns]
     return missing
+
 
 def prepare_bulk_dataframe(df):
     # normalize column names
@@ -94,113 +98,132 @@ def prepare_bulk_dataframe(df):
     # keep only required columns
     df = df[required_cols].copy()
 
-    # convert TotalCharges to numeric
+    # convert numeric columns
+    df["tenure"] = pd.to_numeric(df["tenure"], errors="coerce")
+    df["MonthlyCharges"] = pd.to_numeric(df["MonthlyCharges"], errors="coerce")
     df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
 
     return df, None
+
 
 # ---------------- ROUTES ----------------
 @app.route('/')
 def home():
     return render_template('home.html')
 
+
 # ---------- SINGLE CUSTOMER PREDICTION ----------
-@app.route('/single')
-def single():
-    return render_template('single_predict.html')
+@app.route('/single_predict', methods=['GET', 'POST'])
+def single_predict():
+    if request.method == 'POST':
+        try:
+            form_data = {
+                "tenure": request.form.get("tenure", ""),
+                "MonthlyCharges": request.form.get("MonthlyCharges", ""),
+                "TotalCharges": request.form.get("TotalCharges", ""),
+                "InternetService": request.form.get("InternetService", ""),
+                "PaymentMethod": request.form.get("PaymentMethod", ""),
+                "PaperlessBilling": request.form.get("PaperlessBilling", ""),
+                "Contract": request.form.get("Contract", ""),
+                "OnlineSecurity": request.form.get("OnlineSecurity", ""),
+                "OnlineBackup": request.form.get("OnlineBackup", ""),
+                "DeviceProtection": request.form.get("DeviceProtection", ""),
+                "TechSupport": request.form.get("TechSupport", ""),
+                "Partner": request.form.get("Partner", ""),
+                "Dependents": request.form.get("Dependents", "")
+            }
 
-@app.route('/predict_single', methods=['POST'])
-def predict_single():
-    try:
-        # numerical
-        tenure = float(request.form['tenure'])
-        monthly_charges = float(request.form['MonthlyCharges'])
+            input_df = pd.DataFrame([form_data])
 
-        total_charges_input = request.form['TotalCharges'].strip()
-        if total_charges_input == "":
-            total_charges = np.nan
-        else:
-            total_charges = float(total_charges_input)
+            # Convert numeric columns
+            input_df["tenure"] = pd.to_numeric(input_df["tenure"], errors="coerce")
+            input_df["MonthlyCharges"] = pd.to_numeric(input_df["MonthlyCharges"], errors="coerce")
+            input_df["TotalCharges"] = pd.to_numeric(input_df["TotalCharges"], errors="coerce")
 
-        # categorical
-        input_data = pd.DataFrame([{
-            'tenure': tenure,
-            'MonthlyCharges': monthly_charges,
-            'TotalCharges': total_charges,
-            'InternetService': request.form['InternetService'],
-            'PaymentMethod': request.form['PaymentMethod'],
-            'PaperlessBilling': request.form['PaperlessBilling'],
-            'Contract': request.form['Contract'],
-            'OnlineSecurity': request.form['OnlineSecurity'],
-            'OnlineBackup': request.form['OnlineBackup'],
-            'DeviceProtection': request.form['DeviceProtection'],
-            'TechSupport': request.form['TechSupport'],
-            'Partner': request.form['Partner'],
-            'Dependents': request.form['Dependents']
-        }])
+            transformed_input = pipeline.transform(input_df)
 
-        transformed_input = pipeline.transform(input_data)
+            prediction = model.predict(transformed_input)[0]
 
-        prediction = model.predict(transformed_input)[0]
+            classes = list(model.classes_)
+            yes_index = classes.index("Yes")
+            probability = model.predict_proba(transformed_input)[0][yes_index]
 
-        # churn probability for "Yes"
-        classes = list(model.classes_)
-        yes_index = classes.index("Yes")
-        churn_probability = model.predict_proba(transformed_input)[0][yes_index]
+            return render_template(
+                'single_predict.html',
+                form_data=form_data,
+                prediction_text=f"Predicted Churn: {prediction}",
+                probability_text=f"Churn Probability: {probability:.2%}",
+                error=None
+            )
 
-        return render_template(
-            'single_predict.html',
-            prediction_text=f"Predicted Churn: {prediction}",
-            probability_text=f"Churn Probability: {churn_probability:.2%}"
-        )
+        except Exception as e:
+            return render_template(
+                'single_predict.html',
+                form_data=request.form,
+                prediction_text=None,
+                probability_text=None,
+                error=str(e)
+            )
 
-    except Exception as e:
-        return render_template(
-            'single_predict.html',
-            prediction_text="Error while predicting.",
-            probability_text=str(e)
-        )
+    # GET request
+    return render_template(
+        'single_predict.html',
+        form_data={},
+        prediction_text=None,
+        probability_text=None,
+        error=None
+    )
+
 
 # ---------- BULK FILE PREDICTION ----------
 @app.route('/bulk')
 def bulk():
-    return render_template('bulk_upload.html')
+    return render_template(
+        'bulk_upload.html',
+        success=None,
+        error=None,
+        download_ready=False
+    )
+
 
 @app.route('/predict_bulk', methods=['POST'])
-
 def predict_bulk():
     try:
         if 'file' not in request.files:
-            return render_template('bulk_upload.html', error="No file uploaded.")
+            return render_template(
+                'bulk_upload.html',
+                error="No file uploaded.",
+                success=None,
+                download_ready=False
+            )
 
         file = request.files['file']
 
         if file.filename == '':
-            return render_template('bulk_upload.html', error="Please choose a file.")
+            return render_template(
+                'bulk_upload.html',
+                error="Please choose a file.",
+                success=None,
+                download_ready=False
+            )
 
         filename = file.filename.lower()
 
         # ---------------- READ CSV / EXCEL SAFELY ----------------
         if filename.endswith('.csv'):
-            # Try normal CSV first
             df = pd.read_csv(file)
 
-            # Case 1: tab-separated CSV got read as one column
+            # Case 1: tab-separated read as one column
             if len(df.columns) == 1:
                 file.seek(0)
                 df = pd.read_csv(file, sep='\t')
 
-            # Case 2: quoted one-column CSV where whole row is stored as one string
+            # Case 2: quoted one-column CSV
             if len(df.columns) == 1:
                 single_col_header = df.columns[0]
-
-                # split the header into actual column names
                 new_cols = [col.strip().strip('"') for col in single_col_header.split(',')]
-
-                # split each row into separate values
                 split_rows = df.iloc[:, 0].astype(str).str.strip('"').str.split(',', expand=True)
 
-                # only replace if split count matches header count
                 if split_rows.shape[1] == len(new_cols):
                     split_rows.columns = new_cols
                     df = split_rows
@@ -211,7 +234,9 @@ def predict_bulk():
         else:
             return render_template(
                 'bulk_upload.html',
-                error="Unsupported file type. Please upload CSV or Excel."
+                error="Unsupported file type. Please upload CSV or Excel.",
+                success=None,
+                download_ready=False
             )
 
         # Keep original uploaded file for output
@@ -223,7 +248,9 @@ def predict_bulk():
         if missing:
             return render_template(
                 'bulk_upload.html',
-                error=f"Missing required columns: {', '.join(missing)}"
+                error=f"Missing required columns: {', '.join(missing)}",
+                success=None,
+                download_ready=False
             )
 
         # Transform using saved pipeline
@@ -247,17 +274,25 @@ def predict_bulk():
         return render_template(
             'bulk_upload.html',
             success="Prediction completed successfully!",
+            error=None,
             download_ready=True
         )
 
     except Exception as e:
-        return render_template('bulk_upload.html', error=str(e))
+        return render_template(
+            'bulk_upload.html',
+            error=str(e),
+            success=None,
+            download_ready=False
+        )
+
 
 @app.route('/download')
 def download_file():
     if os.path.exists(OUTPUT_FILE):
         return send_file(OUTPUT_FILE, as_attachment=True)
     return "No prediction file found."
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
