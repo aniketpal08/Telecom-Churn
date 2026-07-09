@@ -99,9 +99,7 @@ def prepare_bulk_dataframe(df):
     df = df[required_cols].copy()
 
     # convert numeric columns
-    df["tenure"] = pd.to_numeric(df["tenure"], errors="coerce")
-    df["MonthlyCharges"] = pd.to_numeric(df["MonthlyCharges"], errors="coerce")
-    df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
+    prepared_df = prepare_single_dataframe(input_df)
 
     return df, None
 
