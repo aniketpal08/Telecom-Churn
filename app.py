@@ -132,11 +132,8 @@ def single_predict():
             }
 
             input_df = pd.DataFrame([form_data])
-
-            # Convert numeric columns
-            input_df["tenure"] = pd.to_numeric(input_df["tenure"], errors="coerce")
-            input_df["MonthlyCharges"] = pd.to_numeric(input_df["MonthlyCharges"], errors="coerce")
-            input_df["TotalCharges"] = pd.to_numeric(input_df["TotalCharges"], errors="coerce")
+  
+            prepared_df = prepare_single_dataframe(input_df)
 
             transformed_input = pipeline.transform(input_df)
 
