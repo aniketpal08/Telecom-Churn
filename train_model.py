@@ -65,7 +65,7 @@ X_train_prepared = pipeline.fit_transform(X_train)
 
 # model
 model = LogisticRegression(
-    C=10,
+    C=100,
     class_weight='balanced',
     penalty='l2',
     solver='lbfgs',
