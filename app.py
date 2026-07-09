@@ -86,21 +86,7 @@ def validate_columns(df):
     return missing
 
 
-def prepare_dataframe(df):
-    """Prepare dataframe for model input (handles both single and bulk)"""
-    # keep only required columns
-    df = df[required_cols].copy()
-    
-    # convert numeric columns
-    df["tenure"] = pd.to_numeric(df["tenure"], errors="coerce")
-    df["MonthlyCharges"] = pd.to_numeric(df["MonthlyCharges"], errors="coerce")
-    df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
-    
-    return df
-
-
 def prepare_bulk_dataframe(df):
-    """Prepare bulk dataframe with normalization and validation"""
     # normalize column names
     df = normalize_columns(df)
 
@@ -109,8 +95,13 @@ def prepare_bulk_dataframe(df):
     if missing:
         return None, missing
 
-    # prepare using common function
-    df = prepare_dataframe(df)
+    # keep only required columns
+    df = df[required_cols].copy()
+
+    # convert numeric columns
+    df["tenure"] = pd.to_numeric(df["tenure"], errors="coerce")
+    df["MonthlyCharges"] = pd.to_numeric(df["MonthlyCharges"], errors="coerce")
+    df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
 
     return df, None
 
@@ -143,12 +134,13 @@ def single_predict():
             }
 
             input_df = pd.DataFrame([form_data])
-            
-            # Prepare dataframe
-            prepared_df = prepare_dataframe(input_df)
-            
-            # Transform using saved pipeline
-            transformed_input = pipeline.transform(prepared_df)
+
+            # Convert numeric columns
+            input_df["tenure"] = pd.to_numeric(input_df["tenure"], errors="coerce")
+            input_df["MonthlyCharges"] = pd.to_numeric(input_df["MonthlyCharges"], errors="coerce")
+            input_df["TotalCharges"] = pd.to_numeric(input_df["TotalCharges"], errors="coerce")
+
+            transformed_input = pipeline.transform(input_df)
 
             prediction = model.predict(transformed_input)[0]
 
